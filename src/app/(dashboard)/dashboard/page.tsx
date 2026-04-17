@@ -57,6 +57,28 @@ export default async function DashboardPage() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
+      {/* Demo notice */}
+      <div className="mb-6 bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+        <div className="flex items-start gap-3">
+          <span className="text-xl flex-shrink-0">🧪</span>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-indigo-900 text-sm">
+              Live demo — preloaded with sample data
+            </p>
+            <p className="text-indigo-700 text-xs mt-1">
+              This demo shows a fictional landlord's portfolio: <strong>3 properties</strong> (Manchester,
+              Leeds, Birmingham), <strong>2 active tenancies</strong>, <strong>2 open repairs</strong>, and{" "}
+              <strong>25 financial transactions</strong> for the 2025–26 tax year.
+            </p>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-indigo-600">
+              <span>→ <a href="/properties/prop-002" className="underline hover:text-indigo-900">Leeds flat</a> has expired EPC &amp; EICR — explore compliance alerts</span>
+              <span>→ <a href="/finances?year=2025-26" className="underline hover:text-indigo-900">Finances</a> shows £17,450 income, quarterly P&amp;L, MTD prep</span>
+              <span>→ <a href="/properties/prop-001/tenancy" className="underline hover:text-indigo-900">Elm Street tenancy</a> shows deposit &amp; right-to-rent workflow</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
         <p className="text-gray-500 text-sm mt-1">

@@ -69,10 +69,10 @@ export default function LandingPage() {
             href="/dashboard"
             className="inline-block bg-white text-blue-800 font-semibold px-8 py-4 rounded-xl text-lg hover:bg-blue-50 transition-colors"
           >
-            Get Started — It's Free
+            Open Live Demo →
           </Link>
           <p className="mt-4 text-blue-300 text-sm">
-            No account required · Demo data preloaded
+            No login required · 3 sample properties preloaded · Full functionality
           </p>
         </div>
       </section>
