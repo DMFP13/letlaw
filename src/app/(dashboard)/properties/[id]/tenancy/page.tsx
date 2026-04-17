@@ -147,6 +147,30 @@ export default async function TenancyPage({
             )}
           </div>
 
+          {/* RRA Document Generator */}
+          <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="font-semibold text-indigo-900">✨ RRA Document Generator</h2>
+                <p className="text-sm text-indigo-700 mt-1">
+                  Generate and print the four documents required by the Renters' Rights Act — pre-filled from this tenancy's data. Includes AI clause customisation.
+                </p>
+                <ul className="text-xs text-indigo-600 mt-2 space-y-0.5">
+                  <li>• RRA Information Sheet (mandatory from 1 May 2026)</li>
+                  <li>• Written Tenancy Terms (mandatory from 1 May 2026)</li>
+                  <li>• Section 13 Rent Increase Notice</li>
+                  <li>• Right-to-Rent Check Record</li>
+                </ul>
+              </div>
+              <Link
+                href={`/properties/${id}/tenancy/documents`}
+                className="flex-shrink-0 bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Open →
+              </Link>
+            </div>
+          </div>
+
           {/* End tenancy */}
           <div className="bg-white border border-red-100 rounded-xl p-5">
             <h2 className="font-semibold text-red-800 mb-2">End Tenancy</h2>
