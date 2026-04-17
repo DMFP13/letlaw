@@ -160,10 +160,10 @@ export default async function PropertyDetailPage({
           <p className="text-gray-500 text-sm">No active tenancy. Property is vacant.</p>
         )}
         {activeTenancy && (
-          <div className="mt-3 flex gap-3">
+          <div className="mt-4">
             <Link
               href={`/properties/${id}/tenancy`}
-              className="text-xs text-blue-600 hover:underline"
+              className="inline-block w-full text-center bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-blue-800 transition-colors"
             >
               Update tenancy documents →
             </Link>
