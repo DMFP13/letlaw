@@ -63,7 +63,9 @@ export default function LandingPage() {
           </h1>
           <p className="text-xl text-blue-200 mb-8 leading-relaxed">
             Stay compliant with current English landlord law. Track certificates,
-            manage tenancies, log repairs, and keep a defensible audit trail.
+            manage tenancies, log repairs, keep a defensible audit trail — and
+            automate your quarterly Making Tax Digital (MTD) submissions directly
+            to HMRC.
           </p>
           <Link
             href="/dashboard"
