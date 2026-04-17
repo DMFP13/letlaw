@@ -2,13 +2,18 @@ import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import path from "path";
 
-// Prisma 7 requires a driver adapter — use libsql for SQLite file
+// Prisma 7 requires a driver adapter — use libsql for SQLite file (dev)
+// or Turso (production) via TURSO_DATABASE_URL + TURSO_AUTH_TOKEN env vars.
 let prisma: PrismaClient;
 
 function createPrismaClient() {
-  // Resolve DB path relative to the project root (cwd at runtime)
-  const dbPath = path.resolve(process.cwd(), "dev.db");
-  const adapter = new PrismaLibSql({ url: `file:${dbPath}` });
+  const tursoUrl = process.env.TURSO_DATABASE_URL;
+  const tursoToken = process.env.TURSO_AUTH_TOKEN;
+
+  const adapter = tursoUrl
+    ? new PrismaLibSql({ url: tursoUrl, authToken: tursoToken })
+    : new PrismaLibSql({ url: `file:${path.resolve(process.cwd(), "dev.db")}` });
+
   return new PrismaClient({ adapter } as any);
 }
 
