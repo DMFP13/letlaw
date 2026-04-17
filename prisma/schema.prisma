@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  properties      Property[]
+  mtdSubmissions  MtdSubmission[]
+}
+
+model Property {
+  id           String             @id @default(cuid())
+  userId       String
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  postcode     String
+  propertyType String             @default("house")
+  bedrooms     Int                @default(1)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  tenancies    Tenancy[]
+  compliance   ComplianceRecord[]
+  repairs      Repair[]
+  documents    Document[]
+  transactions Transaction[]
+}
+
+model Tenancy {
+  id                   String       @id @default(cuid())
+  propertyId           String
+  property             Property     @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  status               String       @default("active")
+  startDate            DateTime
+  endDate              DateTime?
+  rentAmount           Float
+  rentFrequency        String       @default("monthly")
+  rentDueDay           Int          @default(1)
+  depositAmount        Float?
+  depositScheme        String?
+  depositRef           String?
+  depositProtectedAt   DateTime?
+  prescribedInfoIssued Boolean      @default(false)
+  prescribedInfoDate   DateTime?
+  infoSheetIssued      Boolean      @default(false)
+  infoSheetDate        DateTime?
+  writtenTermsIssued   Boolean      @default(false)
+  writtenTermsDate     DateTime?
+  rightToRentChecked   Boolean      @default(false)
+  rightToRentDate      DateTime?
+  lastRentIncreaseDate DateTime?
+  notes                String?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  tenants              Tenant[]
+  rentReviews          RentReview[]
+}
+
+model Tenant {
+  id        String   @id @default(cuid())
+  tenancyId String
+  tenancy   Tenancy  @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+  firstName String
+  lastName  String
+  email     String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ComplianceRecord {
+  id            String    @id @default(cuid())
+  propertyId    String
+  property      Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  type          String
+  status        String    @default("unknown")
+  issueDate     DateTime?
+  expiryDate    DateTime?
+  certificateNo String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Repair {
+  id                String     @id @default(cuid())
+  propertyId        String
+  property          Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  title             String
+  description       String
+  category          String
+  severity          String     @default("medium")
+  status            String     @default("open")
+  reportedAt        DateTime   @default(now())
+  targetDate        DateTime?
+  resolvedAt        DateTime?
+  contractorName    String?
+  contractorContact String?
+  cost              Float?
+  notes             String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  evidence          Document[]
+}
+
+model Document {
+  id         String   @id @default(cuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  repairId   String?
+  repair     Repair?  @relation(fields: [repairId], references: [id])
+  name       String
+  type       String
+  fileUrl    String?
+  notes      String?
+  uploadedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model RentReview {
+  id             String   @id @default(cuid())
+  tenancyId      String
+  tenancy        Tenancy  @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+  proposedAmount Float
+  currentAmount  Float
+  noticeDate     DateTime
+  effectiveDate  DateTime
+  status         String   @default("pending")
+  noticeRef      String?
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// ── Accounting ────────────────────────────────────────────────────────────────
+
+model Transaction {
+  id           String    @id @default(cuid())
+  propertyId   String
+  property     Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  // "income" | "expense"
+  kind         String
+  // HMRC property income/expense categories (see utils)
+  category     String
+  description  String
+  amount       Float
+  date         DateTime
+  taxYear      String    // e.g. "2025-26"
+  quarter      Int?      // 1-4 for MTD quarterly mapping
+  // Receipt evidence
+  receiptUrl   String?
+  receiptNotes String?
+  supplier     String?
+  reference    String?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model MtdSubmission {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taxYear      String    // e.g. "2025-26"
+  // "Q1" | "Q2" | "Q3" | "Q4" | "annual"
+  period       String
+  periodStart  DateTime
+  periodEnd    DateTime
+  // "draft" | "submitted" | "accepted" | "rejected"
+  status       String    @default("draft")
+  // HMRC response reference
+  hmrcRef      String?
+  submittedAt  DateTime?
+  // Snapshot of figures at submission time (JSON string)
+  figuresJson  String?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
